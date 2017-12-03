@@ -1,0 +1,10 @@
+name: Django Template
+
+tests:
+
+  - name: 'filter tags'
+    converts:
+      - "foo {{ bar | qux }} baz":  "foo {{ bar | qux }} baz"
+      - "foo {{ bar | qux(1) }} baz": "foo {{ bar | qux:1 }} baz"
+      - "foo {{ bar | qux('quux') }} baz": "foo {{ bar | qux:'quux' }} baz"
+      - "foo {{ bar | qux('quux') | corge}} baz": "foo {{ bar | qux:'quux' | corge }} baz"
