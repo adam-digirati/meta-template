@@ -26,7 +26,7 @@ tests:
       - "{% if z == 'bar' %}yes{% endif %}"
       - "{% if z %}yes{% else %}no{% endif %}"
     converts:
-      "{% if z %}yes{% elif y %}maybe{% else %}no{% endif %}": "{% if z %}yes{% else %}{% if y %}maybe{% else %}no{% endif %}{% endif %}"
+      "{% if z %}yes{% elif y %}maybe{% else %}no{% endif %}": "{% if z %}yes{% elsif y %}maybe{% else %}no{% endif %}"
 
   - name: 'simple operators'
     tests:

@@ -4,27 +4,39 @@ const invariant = require('invariant');
 const NULL = 'null';
 
 const If = function(node) {
-  invariant(this.K_IF, 'Encountered If without K_IF');
+  const isElif = node === node.parent.else_;
   invariant(this.K_END_IF, 'Encountered If without K_END_IF');
-
+  if (isElif) {
+    invariant(this.K_ELSE_IF, 'Encountered If..Else without K_ELSE');
+  } else {
+    invariant(this.K_IF, 'Encountered If without K_IF');
+  }
+  
   const parts = [
     this.C_OPEN, this.WS,
-    this.K_IF, this.WS,
+    isElif ? this.K_ELSE_IF : this.K_IF, this.WS,
     this.node(node.cond), this.WS,
     this.C_CLOSE,
     this.node(node.body)
   ];
 
   if (node.else_) {
-    invariant(this.K_ELSE, 'Encountered If..Else without K_ELSE');
-    // TODO: produce elseif expressions, rather than nested if/else
-    parts.push(
-      this.C_OPEN, this.WS,
-      this.K_ELSE, this.WS,
-      this.C_CLOSE,
-      this.node(node.else_)
-    );
+    if (node.else_.cond) {
+      parts.push(
+        this.node(node.else_)
+      );
+      return parts.join('');
+    } else {
+      invariant(this.K_ELSE, 'Encountered If..Else without K_ELSE');
+      parts.push(
+        this.C_OPEN, this.WS,
+        this.K_ELSE, this.WS,
+        this.C_CLOSE,
+        this.node(node.else_)
+      );
+    }
   }
+
   return parts.concat([
     this.C_OPEN, this.WS,
     this.K_END_IF, this.WS,
