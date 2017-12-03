@@ -23,21 +23,34 @@ const Filter = function(node) {
 };
 
 const For = function(node) {
-  const parts = [
+  let parts = [
     this.C_OPEN, this.WS,
     this.node(node.arr),
     '.each do |',
     this.node(node.name),
     '|', this.WS,
-    this.C_CLOSE
-  ];
-
-  return parts.concat([
+    this.C_CLOSE,
     this.node(node.body),
     this.C_OPEN, this.WS,
     this.K_END_FOR, this.WS,
     this.C_CLOSE
-  ]).join('');
+  ];
+
+  if (node.else_) {
+    parts.push.apply(parts, [
+      this.C_OPEN, this.WS,
+      this.K_IF, this.WS,
+      this.node(node.arr), 
+      '.length == 0',
+      this.WS,
+      this.C_CLOSE,
+      this.node(node.else_),
+      this.C_OPEN, this.WS,
+      this.K_END_IF, this.WS,
+      this.C_CLOSE
+    ]);
+  }
+  return parts.join('');
 };
 
 const Set = function(node) {

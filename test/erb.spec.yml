@@ -22,6 +22,7 @@ tests:
     converts:
       "{% for x in items %}la {{ x[0] }}{% endfor %}": "<% items.each do |x| %>la <%= x[0] %><% end %>"
       "{% for x in items.x['foo bar'].qux %}la {{ x[0] }}{% endfor %}": "<% items.x['foo bar'].qux.each do |x| %>la <%= x[0] %><% end %>"
+      "{% for x in items %}la {{ x[0] }}{% else %}No{% endfor %}": "<% items.each do |x| %>la <%= x[0] %><% end %><% if items.length == 0 %>No<% end %>"
 
   - name: 'if conditionals'
     converts:

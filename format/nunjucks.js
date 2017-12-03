@@ -51,6 +51,7 @@ module.exports = formatFactory({
   K_FOR:        'for',
   K_END_FOR:    'endfor',
   K_FOR_IN:     'in',
+  K_FOR_ELSE:   'else',
   K_BLOCK:      'block',
   K_END_BLOCK:  'endblock',
   K_EXTENDS:    'extends',

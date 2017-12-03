@@ -24,3 +24,8 @@ tests:
       - '{{ x + 1 }}'
       - '{{ x or y }}'
       - '{{ (x) }}'
+
+  - name: 'for..in loops'
+    converts:
+      - "{% for x in items %}la {{ x[0] }}{% endfor %}": "{{#each items}}la {{{[0]}}}{{/each}}"
+      - "{% for x in items.x.qux %}la {{ x[0] }}{% else %}No{% endfor %}": "{{#each items.x.qux}}la {{{[0]}}}{{else}}No{{/each}}"

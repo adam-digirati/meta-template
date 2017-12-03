@@ -46,17 +46,25 @@ const For = function(node) {
     this.WS, 'in', this.WS,
     this.node(node.arr),
     '):', this.WS,
-    this.C_CLOSE
-  ];
-
-  // TODO: node.else_
-
-  return parts.concat([
+    this.C_CLOSE,
     this.node(node.body),
     this.C_OPEN, this.WS,
     'endforeach;', this.WS,
     this.C_CLOSE
-  ]).join('');
+  ];
+
+  if (node.else_) {
+    parts.pop();
+    parts.push.apply(parts, [
+      'if (count(', this.node(node.arr), ')==0):', this.WS,
+      this.C_CLOSE,
+      this.node(node.else_),
+      this.C_OPEN, this.WS,
+      'endif;', this.WS,
+      this.C_CLOSE
+    ]);
+  }
+  return parts.join('');
 };
 
 const isFunctionName = (node) => {
