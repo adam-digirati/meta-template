@@ -36,7 +36,7 @@ tests:
       - from: "{% if z %}yes{% else %}no{% endif %}"
         to:   "<?php if ($z): ?>yes<?php else: ?>no<?php endif; ?>"
       - from: "{% if z %}yes{% elif y %}maybe{% else %}no{% endif %}"
-        to:   "<?php if ($z): ?>yes<?php else: ?><?php if ($y): ?>maybe<?php else: ?>no<?php endif; ?><?php endif; ?>"
+        to:   "<?php if ($z): ?>yes<?php elseif ($y): ?>maybe<?php else: ?>no<?php endif; ?>"
 
   - name: 'simple operators'
     tests:

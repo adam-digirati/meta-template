@@ -7,20 +7,29 @@ const ast = require('../ast');
 const NULL = 'null';
 
 const If = function(node) {
+  const isElif = node === node.parent.else_;
+
   const parts = [
     this.C_OPEN, this.WS,
-    'if (', this.node(node.cond), '):', this.WS,
+    isElif ? 'elseif (' :  'if (', 
+    this.node(node.cond), '):', this.WS,
     this.C_CLOSE,
     this.node(node.body)
   ];
   if (node.else_) {
-    // TODO: produce elseif expressions, rather than nested if/else
-    parts.push(
-      this.C_OPEN, this.WS,
-      'else:', this.WS,
-      this.C_CLOSE,
-      this.node(node.else_)
-    );
+    if (node.else_.cond) {
+      parts.push(
+        this.node(node.else_)
+      );
+      return parts.join('');
+    } else {
+      parts.push(
+        this.C_OPEN, this.WS,
+        'else:', this.WS,
+        this.C_CLOSE,
+        this.node(node.else_)
+      );
+    }
   }
   return parts.concat([
     this.C_OPEN, this.WS,
