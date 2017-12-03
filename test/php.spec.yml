@@ -26,6 +26,8 @@ tests:
         to:   "<?php foreach ($x in $items): ?>la <?= $x[0] ?><?php endforeach; ?>"
       - from: "{% for x in items.x['foo bar'].qux %}la {{ x[0] }}{% endfor %}"
         to:   "<?php foreach ($x in $items['x']['foo bar']['qux']): ?>la <?= $x[0] ?><?php endforeach; ?>"
+      - from: "{% for x in items %}la {{ x[0] }}{%else%}No{% endfor %}"
+        to:   "<?php foreach ($x in $items): ?>la <?= $x[0] ?><?php endforeach; if (count($items)==0): ?>No<?php endif; ?>"
 
   - name: 'formats if conditionals'
     converts:

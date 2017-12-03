@@ -19,6 +19,7 @@ tests:
     preserves:
       - "{% for x in items %}la {{ x[0] }}{% endfor %}"
       - "{% for x in items.x['foo bar'].qux %}la {{ x[0] }}{% endfor %}"
+      - "{% for x in items.x['foo bar'].qux %}la {{ x[0] }}{% else %}No{% endfor %}"
 
   - name: 'formats if conditionals'
     preserves:

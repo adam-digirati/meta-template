@@ -43,13 +43,22 @@ const For = function(node) {
     this.node(node.name), this.WS,
     this.K_FOR_IN, this.WS,
     this.node(node.arr), this.WS,
-    this.C_CLOSE
+    this.C_CLOSE,
+    this.node(node.body),
   ];
 
-  // TODO: node.else_
+  if (node.else_) {
+    invariant(this.K_FOR_ELSE, 'Encountered For..Else without K_FOR_ELSE');
+    parts.push(
+      this.C_OPEN, this.WS,
+      this.K_FOR_ELSE, this.WS,
+      this.C_CLOSE,
+      this.node(node.else_)
+    );
+  }
 
   return parts.concat([
-    this.node(node.body),
+    
     this.C_OPEN, this.WS,
     this.K_END_FOR, this.WS,
     this.C_CLOSE
@@ -270,6 +279,8 @@ module.exports = {
   K_FOR:        null,
   // for..in "in" keyword
   K_FOR_IN:     null,
+  // for .. else keyword
+  K_FOR_ELSE:     null,
   // end for/foreach/each
   K_END_FOR:    null,
 

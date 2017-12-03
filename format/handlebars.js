@@ -85,13 +85,24 @@ const For = function(node) {
   this._chomp(node.name);
 
   const parts = [
-    '{{#each ',
+    this.C_OPEN, this.K_EACH, this.WS,
     this.node(node.arr),
-    '}}',
+    this.C_CLOSE,
     this.node(node.body)
   ];
 
   this._spit(node.name);
+
+  if (node.else_) {
+    // NOTE: isn't it K_FOR_ELSE?
+    invariant(this.K_EACH_ELSE, 'Encountered For..Else without K_EACH_ELSE');
+    parts.push(
+      this.C_OPEN,
+      this.K_EACH_ELSE,
+      this.C_CLOSE,
+      this.node(node.else_)
+    );
+  }
 
   parts.push('{{/each}}');
 
@@ -166,6 +177,7 @@ module.exports = formatFactory({
 
   K_EACH:       '#each ',
   K_END_EACH:   '/each',
+  K_EACH_ELSE:  'else',
 
   If:           If,
   For:          For,
