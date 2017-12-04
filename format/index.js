@@ -30,4 +30,5 @@ module.exports = {
   handlebars: require('./handlebars'),
   php: require('./php'),
   erb: require('./erb'),
+  freemarker: require('./freemarker'),
 };
