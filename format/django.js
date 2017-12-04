@@ -5,7 +5,6 @@ const invariant = require('invariant');
 
 const Filter = function(node) {
   const args = node.args.children;
-  console.log(args, args.length > 2);
   invariant(args.length <= 2, "No multi argument filters in Django templates");
   const rest = args.length > 1
     ? ':' + this.node(args[1])
@@ -19,10 +18,11 @@ const Filter = function(node) {
 };
 
 /**
- * Nunjucks is supposed to be a drop-in replacement for Jinja2,
- * which is written in Python. In order to produce Jinja-compatible
- * output, we need to alias some JS-specific operators and constants.
+ * This module extends the jinja syntax in order to cover 
+ * the discrepancies between django template and jinja.
+ * TODO: macros, implicit method calls, cycler
  */
 module.exports = jinja.extend({
-  Filter: Filter
+  K_FOR_ELSE:   'empty',
+  Filter: Filter,
 });
