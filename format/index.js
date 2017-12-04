@@ -31,4 +31,5 @@ module.exports = {
   php: require('./php'),
   erb: require('./erb'),
   django: require('./django'),
+  freemarker: require('./freemarker'),
 };

@@ -1,0 +1,78 @@
+name: Freemarker
+
+tests:
+
+  - name: 'output expressions'
+    converts:
+      - "foo {{ bar }} baz": "foo ${ bar } baz"
+      - "foo {{ bar }} baz {{ qux[0] }}": "foo ${ bar } baz ${ qux[0] }"
+      - "foo {{ bar['baz qux'][1].x }}": "foo ${ bar['baz qux'][1].x }"
+
+  - name: 'filter tags'
+    converts:
+      - "foo {{ bar | qux }} baz": "foo ${ bar?qux } baz"
+      - "foo {{ bar | qux(1) }} baz": "foo ${ bar?qux(1) } baz"
+      - "foo {{ bar | qux(1, 'quux', bar.baz[0]) }} baz": "foo ${ bar?qux(1, 'quux', bar.baz[0]) } baz"
+
+  - name: 'for..in loops'
+    converts:
+      - "{% for x in items %}la {{ x[0] }}{% endfor %}": "<#list items as x>la ${ x[0] }</#list>"
+      - "{% for x in items.x['foo bar'].qux %}la {{ x[0] }}{% endfor %}": "<#list items.x['foo bar'].qux as x>la ${ x[0] }</#list>"
+
+  - name: 'if conditionals'
+    converts:
+      - "{% if z %}yes{% endif %}": "<#if z>yes</#if>"
+      - "{% if z == 'bar' %}yes{% endif %}": "<#if z == 'bar'>yes</#if>"
+      - "{% if z %}yes{% else %}no{% endif %}": "<#if z>yes<#else>no</#if>"
+      # - "{% if z %}yes{% elseif y %}maybe{% else %}no{% endif %}"
+      - "{% if z %}yes{% else %}{% if y %}maybe{% else %}no{% endif %}{% endif %}": "<#if z>yes<#else><#if y>maybe<#else>no</#if></#if>"
+      - "{% if not foo %}yes{% endif %}": "<#if not foo>yes</#if>"
+
+  - name: 'literals'
+    tests:
+      - name: 'does not quote true, false, or null'
+        converts:
+          - '{{ true }}': '${ true }'
+          - '{{ false }}': '${ false }'
+          # - '{{ null }}': '${ null }' # TODO: handle null
+
+  - name: 'operators'
+    tests:
+      - name: 'add'
+        converts:
+          - '{{ foo + bar }}': '${ foo + bar }'
+          - '{{ foo + 1 }}': '${ foo + 1 }'
+          - '{{ foo + 1 + bar }}': '${ foo + 1 + bar }'
+          - "{{ foo + 'bar' }}": "${ foo + 'bar' }"
+
+      - name: 'subtract'
+        converts:
+          - '{{ foo - bar }}': '${ foo - bar }'
+          - "{{ foo - 1 }}": "${ foo - 1 }"
+
+      - name: 'multiply'
+        converts:
+          - '{{ x * 2 }}': '${ x * 2 }'
+          - '{{ x * y * 2 }}': '${ x * y * 2 }'
+
+      - name: 'divide'
+        converts:
+          - '{{ x / 2 }}': '${ x / 2 }'
+          - '{{ x / y }}': '${ x / y }'
+
+      - name: 'mixed operators'
+        converts:
+          - '{{ foo + bar - 1 }}': '${ foo + bar - 1 }'
+          - '{{ foo / bar + 2 }}': '${ foo / bar + 2 }'
+          - '{{ foo / bar * 2 - 1 }}': '${ foo / bar * 2 - 1 }'
+
+      - name: 'parenthesis grouping'
+        converts:
+          - '{{ foo + (bar + 1) }}': '${ foo + (bar + 1) }'
+          - '{{ foo / (bar + 1) }}': '${ foo / (bar + 1) }'
+
+  - name: 'include nodes'
+    converts:
+      - "{% include 'foo' %}": "<#include 'foo'>"
+      - "{% include foo.bar %}": "<#include foo.bar>"
+      - "{% include foo + '.html' %}": "<#include foo + '.html'>"
